@@ -18,11 +18,16 @@ package dev.dai.countdowntimer
 import android.os.Bundle
 import androidx.activity.compose.setContent
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
+import dev.dai.countdowntimer.ui.components.BottomControllerScreen
+import dev.dai.countdowntimer.ui.components.EditScreen
 import dev.dai.countdowntimer.ui.theme.MyTheme
 
 class MainActivity : AppCompatActivity() {
@@ -30,17 +35,28 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             MyTheme {
-                MyApp()
+                AppContent()
             }
         }
     }
 }
 
-// Start building your app here!
 @Composable
-fun MyApp() {
+fun AppContent() {
     Surface(color = MaterialTheme.colors.background) {
-        Text(text = "Ready... Set... GO!")
+        ConstraintLayout {
+            val (controller) = createRefs()
+            // TODO Crossfade switching TimerScreen and EditScreen
+//            TimerScreen()
+            EditScreen()
+            BottomControllerScreen(
+                modifier = Modifier
+                    .constrainAs(controller) {
+                        bottom.linkTo(parent.bottom)
+                    }
+                    .padding(bottom = 24.dp)
+            )
+        }
     }
 }
 
@@ -48,7 +64,7 @@ fun MyApp() {
 @Composable
 fun LightPreview() {
     MyTheme {
-        MyApp()
+        AppContent()
     }
 }
 
@@ -56,6 +72,6 @@ fun LightPreview() {
 @Composable
 fun DarkPreview() {
     MyTheme(darkTheme = true) {
-        MyApp()
+        AppContent()
     }
 }
