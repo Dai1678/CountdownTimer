@@ -48,7 +48,7 @@ fun BottomControllerScreen(modifier: Modifier = Modifier) {
 
 @Preview
 @Composable
-fun BottomControllerPreview() {
+private fun BottomControllerPreview() {
     MyTheme {
         Surface {
             BottomControllerScreen()
