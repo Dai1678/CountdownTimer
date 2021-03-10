@@ -1,57 +1,107 @@
+/*
+ * Copyright 2021 The Android Open Source Project
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
 package dev.dai.countdowntimer.ui.components
 
+import androidx.compose.animation.ExperimentalAnimationApi
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.Button
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Icon
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
+import androidx.compose.material.TextButton
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
+import dev.dai.countdowntimer.AppState
+import dev.dai.countdowntimer.ScreenType
+import dev.dai.countdowntimer.TimerState
 import dev.dai.countdowntimer.ui.theme.MyTheme
 
+@OptIn(ExperimentalAnimationApi::class)
 @Composable
-fun BottomControllerScreen(modifier: Modifier = Modifier) {
-    ConstraintLayout(modifier = modifier.fillMaxWidth()) {
-        val (resetButton, fab) = createRefs()
-        Button(
-            onClick = { /*TODO*/ },
-            modifier = Modifier
-                .constrainAs(resetButton) {
-                    start.linkTo(parent.start)
-                    centerVerticallyTo(parent)
-                }
-                .padding(start = 24.dp)
+fun BottomControllerScreen(
+    state: AppState,
+    onClickFab: () -> Unit,
+    onClickReset: () -> Unit,
+    onClickDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val isTimerScreen = state.screenType == ScreenType.Timer
+    Row(
+        modifier = modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        TextButton(
+            onClick = { onClickReset() },
+            modifier = Modifier.alpha(if (isTimerScreen) 1f else 0f),
         ) {
             Text(text = "リセット")
         }
 
         FloatingActionButton(
-            onClick = { /*TODO*/ },
-            modifier = Modifier.constrainAs(fab) {
-                centerHorizontallyTo(parent)
-            }
+            onClick = { onClickFab() }
         ) {
-            Icon(
-                imageVector = Icons.Default.PlayArrow,
-                contentDescription = ""
-            )
+            if (state.screenType == ScreenType.Timer) {
+                when (state.timerState) {
+                    TimerState.STARTED -> Icon(
+                        imageVector = Icons.Default.Pause,
+                        contentDescription = ""
+                    )
+                    else -> Icon(
+                        imageVector = Icons.Default.PlayArrow,
+                        contentDescription = ""
+                    )
+                }
+            } else {
+                Icon(
+                    imageVector = Icons.Default.PlayArrow,
+                    contentDescription = ""
+                )
+            }
+        }
+
+        TextButton(
+            onClick = { onClickDelete() },
+            modifier = Modifier.alpha(if (isTimerScreen) 1f else 0f)
+        ) {
+            Text(text = "削除")
         }
     }
 }
 
+@ExperimentalAnimationApi
 @Preview
 @Composable
 private fun BottomControllerPreview() {
     MyTheme {
         Surface {
-            BottomControllerScreen()
+            BottomControllerScreen(
+                state = AppState(),
+                onClickFab = {},
+                onClickReset = {},
+                onClickDelete = {}
+            )
         }
     }
 }
