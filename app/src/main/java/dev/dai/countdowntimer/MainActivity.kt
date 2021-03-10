@@ -22,8 +22,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material.FabPosition
+import androidx.compose.material.FloatingActionButton
+import androidx.compose.material.Icon
 import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Surface
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Pause
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
@@ -50,33 +57,59 @@ class MainActivity : AppCompatActivity() {
 @Composable
 fun AppContent(viewModel: MainActivityViewModel) {
     Surface(color = MaterialTheme.colors.background) {
-        Column {
-            Crossfade(
-                targetState = viewModel.countdownTimerState.screenType,
-                modifier = Modifier.weight(1f)
-            ) { screenType ->
-                when (screenType) {
-                    ScreenType.Timer -> TimerScreen(state = viewModel.countdownTimerState)
-                    ScreenType.Edit -> EditScreen(
-                        state = viewModel.countdownTimerState,
-                        onClickKey = { number -> viewModel.inputKey(number) },
-                        onClickBackKey = { viewModel.backKey() }
-                    )
-                }
-            }
-            BottomControllerScreen(
-                state = viewModel.countdownTimerState,
-                onClickFab = {
-                    if (viewModel.countdownTimerState.screenType == ScreenType.Timer) {
-                        viewModel.toggleTimer()
-                    } else {
-                        viewModel.editCompleted()
+        Scaffold(
+            floatingActionButton = {
+                FloatingActionButton(
+                    onClick = {
+                        if (viewModel.countdownTimerState.screenType == ScreenType.Timer) {
+                            viewModel.toggleTimer()
+                        } else {
+                            viewModel.editCompleted()
+                        }
                     }
-                },
-                onClickReset = viewModel::resetTimer,
-                onClickDelete = viewModel::deleteTimer,
-                modifier = Modifier.padding(bottom = 24.dp)
-            )
+                ) {
+                    if (viewModel.countdownTimerState.screenType == ScreenType.Timer) {
+                        when (viewModel.countdownTimerState.timerState) {
+                            TimerState.STARTED -> Icon(
+                                imageVector = Icons.Default.Pause,
+                                contentDescription = ""
+                            )
+                            else -> Icon(
+                                imageVector = Icons.Default.PlayArrow,
+                                contentDescription = ""
+                            )
+                        }
+                    } else {
+                        Icon(
+                            imageVector = Icons.Default.PlayArrow,
+                            contentDescription = ""
+                        )
+                    }
+                }
+            },
+            floatingActionButtonPosition = FabPosition.Center
+        ) {
+            Column {
+                Crossfade(
+                    targetState = viewModel.countdownTimerState.screenType,
+                    modifier = Modifier.weight(1f)
+                ) { screenType ->
+                    when (screenType) {
+                        ScreenType.Timer -> TimerScreen(state = viewModel.countdownTimerState)
+                        ScreenType.Edit -> EditScreen(
+                            state = viewModel.countdownTimerState,
+                            onClickKey = { number -> viewModel.inputKey(number) },
+                            onClickBackKey = { viewModel.backKey() }
+                        )
+                    }
+                }
+                BottomControllerScreen(
+                    state = viewModel.countdownTimerState,
+                    onClickReset = viewModel::resetTimer,
+                    onClickDelete = viewModel::deleteTimer,
+                    modifier = Modifier.padding(bottom = 24.dp, start = 24.dp, end = 24.dp)
+                )
+            }
         }
     }
 }

@@ -39,7 +39,6 @@ import dev.dai.countdowntimer.ui.theme.MyTheme
 @Composable
 fun BottomControllerScreen(
     state: AppState,
-    onClickFab: () -> Unit,
     onClickReset: () -> Unit,
     onClickDelete: () -> Unit,
     modifier: Modifier = Modifier,
@@ -47,7 +46,7 @@ fun BottomControllerScreen(
     val isTimerScreen = state.screenType == ScreenType.Timer
     Row(
         modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceEvenly,
+        horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         TextButton(
@@ -55,28 +54,6 @@ fun BottomControllerScreen(
             modifier = Modifier.alpha(if (isTimerScreen) 1f else 0f),
         ) {
             Text(text = "リセット")
-        }
-
-        FloatingActionButton(
-            onClick = { onClickFab() }
-        ) {
-            if (state.screenType == ScreenType.Timer) {
-                when (state.timerState) {
-                    TimerState.STARTED -> Icon(
-                        imageVector = Icons.Default.Pause,
-                        contentDescription = ""
-                    )
-                    else -> Icon(
-                        imageVector = Icons.Default.PlayArrow,
-                        contentDescription = ""
-                    )
-                }
-            } else {
-                Icon(
-                    imageVector = Icons.Default.PlayArrow,
-                    contentDescription = ""
-                )
-            }
         }
 
         TextButton(
@@ -95,7 +72,6 @@ private fun BottomControllerPreview() {
         Surface {
             BottomControllerScreen(
                 state = AppState(),
-                onClickFab = {},
                 onClickReset = {},
                 onClickDelete = {}
             )
