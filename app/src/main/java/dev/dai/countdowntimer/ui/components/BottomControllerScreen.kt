@@ -15,7 +15,6 @@
  */
 package dev.dai.countdowntimer.ui.components
 
-import androidx.compose.animation.ExperimentalAnimationApi
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -37,7 +36,6 @@ import dev.dai.countdowntimer.ScreenType
 import dev.dai.countdowntimer.TimerState
 import dev.dai.countdowntimer.ui.theme.MyTheme
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun BottomControllerScreen(
     state: AppState,
@@ -90,7 +88,6 @@ fun BottomControllerScreen(
     }
 }
 
-@ExperimentalAnimationApi
 @Preview
 @Composable
 private fun BottomControllerPreview() {
